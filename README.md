@@ -4,6 +4,11 @@
 
 This repository contains only model and workflow code. It does not include the article PDF, datasets, generated outputs, or pretrained weights.
 
+## Model References
+
+- Restormer: https://arxiv.org/abs/2111.09881
+- RED-CNN: https://ieeexplore.ieee.org/document/7947200
+
 ## What Is Included
 
 - RED-CNN baseline implementation with a training CLI. No RED-CNN pretrained weights are included.
