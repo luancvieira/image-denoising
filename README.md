@@ -1,7 +1,5 @@
 # Micro-CT Image Denoising Models
 
-Clean model code for the fast micro-CT denoising experiments described in:
-
 **Article:** `ARTICLE_LINK_PLACEHOLDER`
 
 This repository contains only model and workflow code. It does not include the article PDF, datasets, generated outputs, or pretrained weights.
