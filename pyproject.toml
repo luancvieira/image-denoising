@@ -18,16 +18,9 @@ dependencies = [
     "xarray>=2023.1",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "ipykernel>=6",
-    "jupyter>=1",
-]
-
 [project.scripts]
 microct-train = "microct_denoising.train:main"
 microct-predict = "microct_denoising.predict:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-

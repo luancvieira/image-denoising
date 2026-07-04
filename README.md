@@ -14,16 +14,11 @@ This repository contains only model and workflow code. It does not include the a
 - Optional validation split where `val_idx = (exclude_idx - 1) % n_samples`.
 - FAST-only normalization: both FAST input and LONG target are normalized with the matching FAST volume mean/std.
 - Full-volume NetCDF prediction export, optional PNG preview, and PSNR/SSIM metrics.
-- A notebook pre-run example for official Restormer `real_denoising.pth`.
 
 ## Repository Layout
 
 ```text
 image-denoising/
-  configs/
-    example_commands.md
-  notebooks/
-    restormer_pretrained_prerun.ipynb
   scripts/
     download_restormer_assets.py
   src/microct_denoising/
@@ -56,7 +51,7 @@ The default variable name is `microtom`. Use `--var-name` if your NetCDF variabl
 ## Install
 
 ```bash
-python -m pip install -e ".[dev]"
+python -m pip install -e .
 ```
 
 For GPU training, install the PyTorch build that matches your CUDA version before installing this package.
@@ -75,6 +70,61 @@ The script downloads:
 
 - official code: https://github.com/swz30/Restormer
 - official checkpoint: `real_denoising.pth` from the `v1.0` release
+
+## Google Colab Restormer Example
+
+In Colab, first select a GPU runtime: `Runtime > Change runtime type > GPU`.
+
+```python
+# 1. Clone this repository.
+!git clone YOUR_GITHUB_REPO_URL image-denoising
+%cd image-denoising
+
+# 2. Install the package.
+!python -m pip install -e .
+
+# 3. Download official Restormer code and pretrained real-denoising weights.
+!python scripts/download_restormer_assets.py \
+  --repo-dir external/Restormer \
+  --download-real-denoising
+```
+
+If your NetCDF data are in Google Drive:
+
+```python
+from google.colab import drive
+drive.mount("/content/drive")
+```
+
+Example pretrained Restormer inference on one FAST volume:
+
+```python
+!python -m microct_denoising.predict \
+  --model restormer \
+  --restormer-root external/Restormer \
+  --pretrained-weights external/Restormer/Denoising/pretrained_models/real_denoising.pth \
+  --input-nc /content/drive/MyDrive/path/to/crops_2min/sample_01.nc \
+  --output-nc outputs/sample_01_restormer_pretrained.nc \
+  --fit-stats-from-input \
+  --save-preview outputs/sample_01_restormer_pretrained.png
+```
+
+Example fine-tuning with paired FAST/LONG folders:
+
+```python
+!python -m microct_denoising.train \
+  --model restormer \
+  --restormer-root external/Restormer \
+  --pretrained-weights external/Restormer/Denoising/pretrained_models/real_denoising.pth \
+  --use-pretrained \
+  --fast-dir /content/drive/MyDrive/path/to/crops_2min \
+  --long-dir /content/drive/MyDrive/path/to/crops_60min \
+  --exclude-idx 0 \
+  --output-root outputs \
+  --epochs 4 \
+  --batch-size 2 \
+  --crop-size 400
+```
 
 ## Train RED-CNN
 
@@ -138,7 +188,7 @@ python -m microct_denoising.predict \
   --stats-path outputs/fast_volume_mean_std_stats.npz
 ```
 
-For a standalone Restormer pretrained pre-run on one volume:
+For standalone Restormer pretrained inference on one volume:
 
 ```bash
 python -m microct_denoising.predict \
