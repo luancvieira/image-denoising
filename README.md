@@ -9,14 +9,9 @@ This repository contains only model and workflow code. It does not include the a
 - Restormer: https://arxiv.org/abs/2111.09881
 - RED-CNN: https://ieeexplore.ieee.org/document/7947200
 
-## What Is Included
+## Repository Scope
 
-- RED-CNN baseline implementation with a training CLI. No RED-CNN pretrained weights are included.
-- Restormer training and inference using the official upstream Restormer code.
-- Leave-one-out splitting for paired fast/long scans.
-- Optional validation split where `val_idx = (exclude_idx - 1) % n_samples`.
-- FAST-only normalization: both FAST input and LONG target are normalized with the matching FAST volume mean/std.
-- Full-volume NetCDF prediction export, optional PNG preview, and PSNR/SSIM metrics.
+This repository provides the code for the models implemented in the article: RED-CNN and Restormer. It includes training with the article-style data splits, optional prediction export, and PSNR/SSIM metric calculation.
 
 ## Repository Layout
 
