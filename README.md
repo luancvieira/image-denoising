@@ -110,6 +110,23 @@ python -m microct_denoising.train \
 
 Use `--epochs 0 --use-pretrained` to save an epoch-0 pretrained prediction before fine-tuning.
 
+## Train Restormer From Scratch
+
+Use the same Restormer command, but remove `--use-pretrained` and remove `--pretrained-weights`:
+
+```bash
+python -m microct_denoising.train \
+  --model restormer \
+  --restormer-root external/Restormer \
+  --fast-dir data/crops_2min \
+  --long-dir data/crops_60min \
+  --exclude-idx 0 \
+  --output-root outputs \
+  --epochs 4 \
+  --batch-size 2 \
+  --crop-size 400
+```
+
 ## Train With Validation
 
 ```bash
