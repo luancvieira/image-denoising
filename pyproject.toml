@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "microct-denoising"
+version = "0.1.0"
+description = "Clean model code for paired fast/long micro-CT denoising experiments."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "einops>=0.7",
+    "matplotlib>=3.7",
+    "netcdf4>=1.6",
+    "numpy>=1.24",
+    "scikit-image>=0.21",
+    "torch>=2.0",
+    "xarray>=2023.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ipykernel>=6",
+    "jupyter>=1",
+]
+
+[project.scripts]
+microct-train = "microct_denoising.train:main"
+microct-predict = "microct_denoising.predict:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
