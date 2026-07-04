@@ -8,7 +8,7 @@ This repository contains only model and workflow code. It does not include the a
 
 ## What Is Included
 
-- RED-CNN baseline trained from scratch on paired NetCDF volumes.
+- RED-CNN baseline implementation with a training CLI. No RED-CNN pretrained weights are included.
 - Restormer training and inference using the official upstream Restormer code.
 - Leave-one-out splitting for paired fast/long scans.
 - Optional validation split where `val_idx = (exclude_idx - 1) % n_samples`.
