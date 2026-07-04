@@ -73,58 +73,9 @@ The script downloads:
 
 ## Google Colab Restormer Example
 
-In Colab, first select a GPU runtime: `Runtime > Change runtime type > GPU`.
+Open the Colab example here:
 
-```python
-# 1. Clone this repository.
-!git clone YOUR_GITHUB_REPO_URL image-denoising
-%cd image-denoising
-
-# 2. Install the package.
-!python -m pip install -e .
-
-# 3. Download official Restormer code and pretrained real-denoising weights.
-!python scripts/download_restormer_assets.py \
-  --repo-dir external/Restormer \
-  --download-real-denoising
-```
-
-If your NetCDF data are in Google Drive:
-
-```python
-from google.colab import drive
-drive.mount("/content/drive")
-```
-
-Example pretrained Restormer inference on one FAST volume:
-
-```python
-!python -m microct_denoising.predict \
-  --model restormer \
-  --restormer-root external/Restormer \
-  --pretrained-weights external/Restormer/Denoising/pretrained_models/real_denoising.pth \
-  --input-nc /content/drive/MyDrive/path/to/crops_2min/sample_01.nc \
-  --output-nc outputs/sample_01_restormer_pretrained.nc \
-  --fit-stats-from-input \
-  --save-preview outputs/sample_01_restormer_pretrained.png
-```
-
-Example fine-tuning with paired FAST/LONG folders:
-
-```python
-!python -m microct_denoising.train \
-  --model restormer \
-  --restormer-root external/Restormer \
-  --pretrained-weights external/Restormer/Denoising/pretrained_models/real_denoising.pth \
-  --use-pretrained \
-  --fast-dir /content/drive/MyDrive/path/to/crops_2min \
-  --long-dir /content/drive/MyDrive/path/to/crops_60min \
-  --exclude-idx 0 \
-  --output-root outputs \
-  --epochs 4 \
-  --batch-size 2 \
-  --crop-size 400
-```
+https://colab.research.google.com/drive/1C2818h7KnjNv4R1sabe14_AYL7lWhmu6?usp=sharing
 
 ## Train RED-CNN
 
