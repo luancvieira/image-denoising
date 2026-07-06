@@ -1,6 +1,6 @@
 # Micro-CT Image Denoising Models
 
-**Article:** `ARTICLE_LINK_PLACEHOLDER`
+**Article:** [article_fast_microCT.pdf](article_fast_microCT.pdf)
 
 This repository contains only model and workflow code. It does not include the article PDF, datasets, generated outputs, or pretrained weights.
 
