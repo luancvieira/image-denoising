@@ -69,8 +69,11 @@ a { color: var(--accent); }
 .frame.missing img { visibility: hidden; }
 
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
-.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
-.card header { display: flex; flex-direction: column; gap: 1px; padding: 7px 10px; min-height: 48px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+  display: flex; flex-direction: column; }
+/* the header takes the free space, so the images of a row start at the same height */
+.card header { display: flex; flex-direction: column; gap: 1px; padding: 7px 10px; flex: 1 0 auto; }
+.card .frame { flex: 0 0 auto; }
 .card h3 { margin: 0; font-size: .92rem; font-weight: 600; }
 .card .m { font-size: .76rem; color: var(--muted); }
 .frame { position: relative; background: var(--img-bg); cursor: zoom-in; line-height: 0; }

@@ -80,6 +80,10 @@
     "scratch": {
      "psnr": 44.38,
      "ssim": 0.9728
+    },
+    "finetuned": {
+     "psnr": 44.63,
+     "ssim": 0.9734
     }
    },
    "dice": {
@@ -196,6 +200,10 @@
     "scratch": {
      "psnr": 42.89,
      "ssim": 0.9581
+    },
+    "finetuned": {
+     "psnr": 43.01,
+     "ssim": 0.9593
     }
    },
    "dice": {
@@ -312,6 +320,10 @@
     "scratch": {
      "psnr": 45.74,
      "ssim": 0.9806
+    },
+    "finetuned": {
+     "psnr": 45.97,
+     "ssim": 0.9812
     }
    },
    "dice": {
@@ -428,6 +440,10 @@
     "scratch": {
      "psnr": 43.86,
      "ssim": 0.969
+    },
+    "finetuned": {
+     "psnr": 43.84,
+     "ssim": 0.9691
     }
    },
    "dice": {
@@ -544,6 +560,10 @@
     "scratch": {
      "psnr": 47.33,
      "ssim": 0.9835
+    },
+    "finetuned": {
+     "psnr": 47.28,
+     "ssim": 0.9836
     }
    },
    "dice": {
@@ -660,6 +680,10 @@
     "scratch": {
      "psnr": 43.87,
      "ssim": 0.9663
+    },
+    "finetuned": {
+     "psnr": 44.05,
+     "ssim": 0.967
     }
    },
    "dice": {
@@ -776,6 +800,10 @@
     "scratch": {
      "psnr": 44.21,
      "ssim": 0.967
+    },
+    "finetuned": {
+     "psnr": 44.24,
+     "ssim": 0.9675
     }
    },
    "dice": {
@@ -892,6 +920,10 @@
     "scratch": {
      "psnr": 46.53,
      "ssim": 0.9803
+    },
+    "finetuned": {
+     "psnr": 46.53,
+     "ssim": 0.9804
     }
    },
    "dice": {
@@ -1008,6 +1040,10 @@
     "scratch": {
      "psnr": 45.64,
      "ssim": 0.977
+    },
+    "finetuned": {
+     "psnr": 45.74,
+     "ssim": 0.9771
     }
    },
    "dice": {
@@ -1124,6 +1160,10 @@
     "scratch": {
      "psnr": 47.79,
      "ssim": 0.9848
+    },
+    "finetuned": {
+     "psnr": 47.81,
+     "ssim": 0.9849
     }
    },
    "dice": {
@@ -1240,6 +1280,10 @@
     "scratch": {
      "psnr": 47.09,
      "ssim": 0.9822
+    },
+    "finetuned": {
+     "psnr": 47.1,
+     "ssim": 0.9823
     }
    },
    "dice": {
@@ -1356,6 +1400,10 @@
     "scratch": {
      "psnr": 46.7,
      "ssim": 0.981
+    },
+    "finetuned": {
+     "psnr": 46.77,
+     "ssim": 0.9811
     }
    },
    "dice": {
