@@ -285,7 +285,7 @@
     render();
   }
 
-  fetch("data/manifest.json")
+  fetch("data/manifest.json", { cache: "no-cache" })
     .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
     .then(init)
     .catch((e) => { $("info").textContent = "Could not load data/manifest.json (" + e.message + ")."; });

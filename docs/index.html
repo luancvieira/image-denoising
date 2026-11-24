@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Micro-CT Sample Viewer</title>
   <meta name="description" content="Central views of the 12 carbonate plugs: fast, intermediate and reference micro-CT acquisitions, restored volumes, error maps and segmentations.">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
   <header class="top">
@@ -67,7 +67,7 @@
     </section>
 
     <footer class="foot">
-      <p>Gray values of each sample share one window (0.1&ndash;99.9 percentiles of the fast, 8&nbsp;min and 60&nbsp;min central views). Restored volumes use the epoch selected for each test plug in the leave-one-plug-out evaluation. PSNR, SSIM, porosity &phi; and Dice are 3D values over the cropped volume; PSNR and SSIM are computed with respect to the 60&nbsp;min reference, Dice with respect to its manual segmentation. Error maps show volume minus reference, clipped at &plusmn;2500 gray levels. Segmentations use the whole-volume threshold of each pipeline; the median filter and removal of small pore clusters are applied on a slab around the shown slice. Images are downsampled 8-bit previews, shown with the origin at the lower left as in the paper figures. Click an image to enlarge it; use the arrow keys to move between images or samples.</p>
+      <p>Gray values of each sample share one window (0.1&ndash;99.9 percentiles of the fast, 8&nbsp;min and 60&nbsp;min central views). Restored volumes use the epoch selected for each test plug in the leave-one-plug-out evaluation. PSNR, SSIM, porosity &phi; and Dice are 3D values over the cropped volume; PSNR and SSIM are computed with respect to the 60&nbsp;min reference, Dice with respect to its manual segmentation. Error maps show volume minus reference, clipped at &plusmn;2500 gray levels. Segmentations use the whole-volume threshold of each pipeline; the median filter and removal of small pore clusters are applied on a slab around the shown slice. Images are 8-bit, one pixel per voxel, shown with the origin at the lower left as in the paper figures. Click an image to enlarge it; use the arrow keys to move between images or samples.</p>
     </footer>
   </main>
 
@@ -81,6 +81,6 @@
     <button id="lbNext" class="lb-nav next" aria-label="Next">&#8250;</button>
   </div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>
