@@ -2,7 +2,25 @@
 
 **Article:** [PDF](./artigo_fast_microCT.pdf)
 
-This repository contains only model and workflow code. It does not include the article PDF, datasets, generated outputs, or pretrained weights.
+**Sample viewer:** [luancvieira.github.io/image-denoising](https://luancvieira.github.io/image-denoising/)
+
+This repository contains model and workflow code. It does not include the datasets, generated outputs, or pretrained weights.
+
+## Sample Viewer
+
+The `docs/` folder is a static website, published with GitHub Pages, that shows the central axial, coronal and sagittal slices of the 12 samples after aluminium standardization:
+
+- gray values of the fast (2 min 35 s), intermediate (8 min) and reference (60 min) acquisitions, of the fast scans restored by RED-CNN, Restormer fine-tuned and Restormer random init., and the manual segmentation of the reference;
+- error maps (volume minus reference);
+- automatic segmentations with the four pipelines of the article (Otsu and multi-Otsu, without and with a median filter), compared with the manual segmentation.
+
+The images are downsampled 8-bit PNG previews (`docs/data/sampleNN/`), described in `docs/data/manifest.json`; the site needs no server or build step. To publish it, open the repository **Settings > Pages**, choose **Deploy from a branch**, branch `main`, folder `/docs`. To preview it locally:
+
+```bash
+python -m http.server --directory docs 8000
+```
+
+and open http://localhost:8000.
 
 ## Model References
 

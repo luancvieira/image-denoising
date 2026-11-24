@@ -1,0 +1,1014 @@
+{
+ "max_px": 600,
+ "planes": [
+  "axial",
+  "coronal",
+  "sagittal"
+ ],
+ "volumes": [
+  {
+   "key": "ref60",
+   "label": "Reference (60 min)"
+  },
+  {
+   "key": "fast",
+   "label": "Fast (2 min 35 s)"
+  },
+  {
+   "key": "int8",
+   "label": "Intermediate (8 min)"
+  },
+  {
+   "key": "redcnn",
+   "label": "RED-CNN"
+  },
+  {
+   "key": "finetuned",
+   "label": "Restormer fine-tuned"
+  },
+  {
+   "key": "scratch",
+   "label": "Restormer random init."
+  },
+  {
+   "key": "manual",
+   "label": "Manual segmentation (60 min)"
+  }
+ ],
+ "samples": [
+  {
+   "id": 1,
+   "label": "Sample 1",
+   "dir": "sample01",
+   "voxel_um": 43.48,
+   "shape_zxy": [
+    1492,
+    537,
+    611
+   ],
+   "window": [
+    1359,
+    12323
+   ],
+   "image_px": {
+    "axial": [
+     600,
+     527
+    ],
+    "coronal": [
+     216,
+     600
+    ],
+    "sagittal": [
+     246,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 33.82,
+     "ssim": 0.7207
+    },
+    "int8": {
+     "psnr": 40.92,
+     "ssim": 0.929
+    },
+    "redcnn": {
+     "psnr": 44.52,
+     "ssim": 0.9725
+    },
+    "scratch": {
+     "psnr": 44.38,
+     "ssim": 0.9728
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.916,
+     "fast": 0.478,
+     "int8": 0.879,
+     "redcnn": 0.832,
+     "finetuned": 0.845,
+     "scratch": 0.849
+    },
+    "otsu2_med3": {
+     "ref60": 0.883,
+     "fast": 0.845,
+     "int8": 0.885,
+     "redcnn": 0.822,
+     "finetuned": 0.835,
+     "scratch": 0.84
+    },
+    "otsu3_raw": {
+     "ref60": 0.739,
+     "fast": 0.733,
+     "int8": 0.811,
+     "redcnn": 0.689,
+     "finetuned": 0.701,
+     "scratch": 0.716
+    },
+    "otsu3_med3": {
+     "ref60": 0.695,
+     "fast": 0.783,
+     "int8": 0.742,
+     "redcnn": 0.666,
+     "finetuned": 0.675,
+     "scratch": 0.692
+    }
+   }
+  },
+  {
+   "id": 2,
+   "label": "Sample 2",
+   "dir": "sample02",
+   "voxel_um": 43.48,
+   "shape_zxy": [
+    1477,
+    618,
+    557
+   ],
+   "window": [
+    1452,
+    10827
+   ],
+   "image_px": {
+    "axial": [
+     541,
+     600
+    ],
+    "coronal": [
+     251,
+     600
+    ],
+    "sagittal": [
+     226,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 34.31,
+     "ssim": 0.7512
+    },
+    "int8": {
+     "psnr": 41.35,
+     "ssim": 0.9378
+    },
+    "redcnn": {
+     "psnr": 42.88,
+     "ssim": 0.9579
+    },
+    "scratch": {
+     "psnr": 42.89,
+     "ssim": 0.9581
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.904,
+     "fast": 0.434,
+     "int8": 0.792,
+     "redcnn": 0.806,
+     "finetuned": 0.808,
+     "scratch": 0.805
+    },
+    "otsu2_med3": {
+     "ref60": 0.902,
+     "fast": 0.704,
+     "int8": 0.868,
+     "redcnn": 0.796,
+     "finetuned": 0.797,
+     "scratch": 0.793
+    },
+    "otsu3_raw": {
+     "ref60": 0.839,
+     "fast": 0.681,
+     "int8": 0.843,
+     "redcnn": 0.717,
+     "finetuned": 0.711,
+     "scratch": 0.702
+    },
+    "otsu3_med3": {
+     "ref60": 0.773,
+     "fast": 0.78,
+     "int8": 0.789,
+     "redcnn": 0.685,
+     "finetuned": 0.678,
+     "scratch": 0.667
+    }
+   }
+  },
+  {
+   "id": 3,
+   "label": "Sample 3",
+   "dir": "sample03",
+   "voxel_um": 43.25,
+   "shape_zxy": [
+    1380,
+    585,
+    600
+   ],
+   "window": [
+    1173,
+    19316
+   ],
+   "image_px": {
+    "axial": [
+     600,
+     585
+    ],
+    "coronal": [
+     254,
+     600
+    ],
+    "sagittal": [
+     261,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 34.56,
+     "ssim": 0.7513
+    },
+    "int8": {
+     "psnr": 41.79,
+     "ssim": 0.9403
+    },
+    "redcnn": {
+     "psnr": 45.53,
+     "ssim": 0.9797
+    },
+    "scratch": {
+     "psnr": 45.74,
+     "ssim": 0.9806
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.972,
+     "fast": 0.718,
+     "int8": 0.94,
+     "redcnn": 0.911,
+     "finetuned": 0.922,
+     "scratch": 0.919
+    },
+    "otsu2_med3": {
+     "ref60": 0.956,
+     "fast": 0.918,
+     "int8": 0.946,
+     "redcnn": 0.906,
+     "finetuned": 0.919,
+     "scratch": 0.916
+    },
+    "otsu3_raw": {
+     "ref60": 0.969,
+     "fast": 0.841,
+     "int8": 0.907,
+     "redcnn": 0.909,
+     "finetuned": 0.921,
+     "scratch": 0.918
+    },
+    "otsu3_med3": {
+     "ref60": 0.954,
+     "fast": 0.888,
+     "int8": 0.945,
+     "redcnn": 0.905,
+     "finetuned": 0.918,
+     "scratch": 0.915
+    }
+   }
+  },
+  {
+   "id": 4,
+   "label": "Sample 4",
+   "dir": "sample04",
+   "voxel_um": 43.48,
+   "shape_zxy": [
+    1380,
+    585,
+    600
+   ],
+   "window": [
+    2561,
+    10919
+   ],
+   "image_px": {
+    "axial": [
+     600,
+     585
+    ],
+    "coronal": [
+     254,
+     600
+    ],
+    "sagittal": [
+     261,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 35.17,
+     "ssim": 0.7776
+    },
+    "int8": {
+     "psnr": 42.23,
+     "ssim": 0.9465
+    },
+    "redcnn": {
+     "psnr": 43.9,
+     "ssim": 0.9688
+    },
+    "scratch": {
+     "psnr": 43.86,
+     "ssim": 0.969
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.619,
+     "fast": 0.305,
+     "int8": 0.519,
+     "redcnn": 0.658,
+     "finetuned": 0.641,
+     "scratch": 0.65
+    },
+    "otsu2_med3": {
+     "ref60": 0.625,
+     "fast": 0.435,
+     "int8": 0.572,
+     "redcnn": 0.659,
+     "finetuned": 0.645,
+     "scratch": 0.649
+    },
+    "otsu3_raw": {
+     "ref60": 0.956,
+     "fast": 0.517,
+     "int8": 0.799,
+     "redcnn": 0.748,
+     "finetuned": 0.751,
+     "scratch": 0.749
+    },
+    "otsu3_med3": {
+     "ref60": 0.903,
+     "fast": 0.693,
+     "int8": 0.862,
+     "redcnn": 0.751,
+     "finetuned": 0.753,
+     "scratch": 0.751
+    }
+   }
+  },
+  {
+   "id": 5,
+   "label": "Sample 5",
+   "dir": "sample05",
+   "voxel_um": 53.93,
+   "shape_zxy": [
+    1120,
+    420,
+    550
+   ],
+   "window": [
+    3543,
+    10729
+   ],
+   "image_px": {
+    "axial": [
+     550,
+     420
+    ],
+    "coronal": [
+     225,
+     600
+    ],
+    "sagittal": [
+     295,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 35.55,
+     "ssim": 0.7735
+    },
+    "int8": {
+     "psnr": 42.62,
+     "ssim": 0.9452
+    },
+    "redcnn": {
+     "psnr": 47.23,
+     "ssim": 0.9831
+    },
+    "scratch": {
+     "psnr": 47.33,
+     "ssim": 0.9835
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.631,
+     "fast": 0.187,
+     "int8": 0.304,
+     "redcnn": 0.549,
+     "finetuned": 0.587,
+     "scratch": 0.579
+    },
+    "otsu2_med3": {
+     "ref60": 0.617,
+     "fast": 0.255,
+     "int8": 0.53,
+     "redcnn": 0.533,
+     "finetuned": 0.562,
+     "scratch": 0.557
+    },
+    "otsu3_raw": {
+     "ref60": 0.845,
+     "fast": 0.326,
+     "int8": 0.741,
+     "redcnn": 0.659,
+     "finetuned": 0.639,
+     "scratch": 0.618
+    },
+    "otsu3_med3": {
+     "ref60": 0.781,
+     "fast": 0.586,
+     "int8": 0.81,
+     "redcnn": 0.654,
+     "finetuned": 0.631,
+     "scratch": 0.615
+    }
+   }
+  },
+  {
+   "id": 6,
+   "label": "Sample 6",
+   "dir": "sample06",
+   "voxel_um": 46.75,
+   "shape_zxy": [
+    1320,
+    530,
+    560
+   ],
+   "window": [
+    2351,
+    10724
+   ],
+   "image_px": {
+    "axial": [
+     560,
+     530
+    ],
+    "coronal": [
+     241,
+     600
+    ],
+    "sagittal": [
+     255,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 34.65,
+     "ssim": 0.751
+    },
+    "int8": {
+     "psnr": 41.52,
+     "ssim": 0.9363
+    },
+    "redcnn": {
+     "psnr": 43.94,
+     "ssim": 0.966
+    },
+    "scratch": {
+     "psnr": 43.87,
+     "ssim": 0.9663
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.841,
+     "fast": 0.303,
+     "int8": 0.592,
+     "redcnn": 0.734,
+     "finetuned": 0.737,
+     "scratch": 0.733
+    },
+    "otsu2_med3": {
+     "ref60": 0.86,
+     "fast": 0.456,
+     "int8": 0.781,
+     "redcnn": 0.733,
+     "finetuned": 0.737,
+     "scratch": 0.74
+    },
+    "otsu3_raw": {
+     "ref60": 0.798,
+     "fast": 0.52,
+     "int8": 0.789,
+     "redcnn": 0.638,
+     "finetuned": 0.654,
+     "scratch": 0.667
+    },
+    "otsu3_med3": {
+     "ref60": 0.708,
+     "fast": 0.714,
+     "int8": 0.735,
+     "redcnn": 0.601,
+     "finetuned": 0.617,
+     "scratch": 0.632
+    }
+   }
+  },
+  {
+   "id": 7,
+   "label": "Sample 7",
+   "dir": "sample07",
+   "voxel_um": 43.48,
+   "shape_zxy": [
+    1160,
+    585,
+    600
+   ],
+   "window": [
+    2919,
+    10208
+   ],
+   "image_px": {
+    "axial": [
+     600,
+     585
+    ],
+    "coronal": [
+     303,
+     600
+    ],
+    "sagittal": [
+     310,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 35.7,
+     "ssim": 0.7913
+    },
+    "int8": {
+     "psnr": 42.92,
+     "ssim": 0.9523
+    },
+    "redcnn": {
+     "psnr": 44.2,
+     "ssim": 0.9662
+    },
+    "scratch": {
+     "psnr": 44.21,
+     "ssim": 0.967
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.509,
+     "fast": 0.302,
+     "int8": 0.401,
+     "redcnn": 0.539,
+     "finetuned": 0.582,
+     "scratch": 0.59
+    },
+    "otsu2_med3": {
+     "ref60": 0.502,
+     "fast": 0.356,
+     "int8": 0.443,
+     "redcnn": 0.506,
+     "finetuned": 0.552,
+     "scratch": 0.573
+    },
+    "otsu3_raw": {
+     "ref60": 0.926,
+     "fast": 0.401,
+     "int8": 0.653,
+     "redcnn": 0.536,
+     "finetuned": 0.57,
+     "scratch": 0.56
+    },
+    "otsu3_med3": {
+     "ref60": 0.807,
+     "fast": 0.513,
+     "int8": 0.721,
+     "redcnn": 0.535,
+     "finetuned": 0.565,
+     "scratch": 0.556
+    }
+   }
+  },
+  {
+   "id": 8,
+   "label": "Sample 8",
+   "dir": "sample08",
+   "voxel_um": 53.32,
+   "shape_zxy": [
+    1180,
+    440,
+    530
+   ],
+   "window": [
+    3482,
+    11426
+   ],
+   "image_px": {
+    "axial": [
+     530,
+     440
+    ],
+    "coronal": [
+     224,
+     600
+    ],
+    "sagittal": [
+     269,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 34.99,
+     "ssim": 0.7542
+    },
+    "int8": {
+     "psnr": 42.06,
+     "ssim": 0.9394
+    },
+    "redcnn": {
+     "psnr": 46.46,
+     "ssim": 0.9798
+    },
+    "scratch": {
+     "psnr": 46.53,
+     "ssim": 0.9803
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.218,
+     "fast": 0.131,
+     "int8": 0.188,
+     "redcnn": 0.25,
+     "finetuned": 0.243,
+     "scratch": 0.247
+    },
+    "otsu2_med3": {
+     "ref60": 0.22,
+     "fast": 0.168,
+     "int8": 0.214,
+     "redcnn": 0.248,
+     "finetuned": 0.24,
+     "scratch": 0.245
+    },
+    "otsu3_raw": {
+     "ref60": 0.756,
+     "fast": 0.233,
+     "int8": 0.375,
+     "redcnn": 0.609,
+     "finetuned": 0.602,
+     "scratch": 0.623
+    },
+    "otsu3_med3": {
+     "ref60": 0.726,
+     "fast": 0.316,
+     "int8": 0.518,
+     "redcnn": 0.609,
+     "finetuned": 0.593,
+     "scratch": 0.611
+    }
+   }
+  },
+  {
+   "id": 9,
+   "label": "Sample 9",
+   "dir": "sample09",
+   "voxel_um": 53.93,
+   "shape_zxy": [
+    1320,
+    450,
+    530
+   ],
+   "window": [
+    2429,
+    11840
+   ],
+   "image_px": {
+    "axial": [
+     530,
+     450
+    ],
+    "coronal": [
+     205,
+     600
+    ],
+    "sagittal": [
+     241,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 33.7,
+     "ssim": 0.6979
+    },
+    "int8": {
+     "psnr": 40.7,
+     "ssim": 0.9197
+    },
+    "redcnn": {
+     "psnr": 45.66,
+     "ssim": 0.9763
+    },
+    "scratch": {
+     "psnr": 45.64,
+     "ssim": 0.977
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.491,
+     "fast": 0.148,
+     "int8": 0.309,
+     "redcnn": 0.515,
+     "finetuned": 0.5,
+     "scratch": 0.5
+    },
+    "otsu2_med3": {
+     "ref60": 0.49,
+     "fast": 0.237,
+     "int8": 0.452,
+     "redcnn": 0.51,
+     "finetuned": 0.494,
+     "scratch": 0.497
+    },
+    "otsu3_raw": {
+     "ref60": 0.905,
+     "fast": 0.323,
+     "int8": 0.658,
+     "redcnn": 0.76,
+     "finetuned": 0.761,
+     "scratch": 0.761
+    },
+    "otsu3_med3": {
+     "ref60": 0.872,
+     "fast": 0.569,
+     "int8": 0.77,
+     "redcnn": 0.765,
+     "finetuned": 0.762,
+     "scratch": 0.763
+    }
+   }
+  },
+  {
+   "id": 10,
+   "label": "Sample 10",
+   "dir": "sample10",
+   "voxel_um": 53.93,
+   "shape_zxy": [
+    1295,
+    460,
+    495
+   ],
+   "window": [
+    3941,
+    10308
+   ],
+   "image_px": {
+    "axial": [
+     495,
+     460
+    ],
+    "coronal": [
+     213,
+     600
+    ],
+    "sagittal": [
+     229,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 36.11,
+     "ssim": 0.7954
+    },
+    "int8": {
+     "psnr": 43.05,
+     "ssim": 0.9502
+    },
+    "redcnn": {
+     "psnr": 47.66,
+     "ssim": 0.9844
+    },
+    "scratch": {
+     "psnr": 47.79,
+     "ssim": 0.9848
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.398,
+     "fast": 0.192,
+     "int8": 0.269,
+     "redcnn": 0.411,
+     "finetuned": 0.387,
+     "scratch": 0.397
+    },
+    "otsu2_med3": {
+     "ref60": 0.407,
+     "fast": 0.244,
+     "int8": 0.359,
+     "redcnn": 0.41,
+     "finetuned": 0.387,
+     "scratch": 0.396
+    },
+    "otsu3_raw": {
+     "ref60": 0.933,
+     "fast": 0.286,
+     "int8": 0.517,
+     "redcnn": 0.621,
+     "finetuned": 0.601,
+     "scratch": 0.604
+    },
+    "otsu3_med3": {
+     "ref60": 0.849,
+     "fast": 0.416,
+     "int8": 0.61,
+     "redcnn": 0.63,
+     "finetuned": 0.616,
+     "scratch": 0.616
+    }
+   }
+  },
+  {
+   "id": 11,
+   "label": "Sample 11",
+   "dir": "sample11",
+   "voxel_um": 53.32,
+   "shape_zxy": [
+    1280,
+    464,
+    492
+   ],
+   "window": [
+    3570,
+    10478
+   ],
+   "image_px": {
+    "axial": [
+     492,
+     464
+    ],
+    "coronal": [
+     218,
+     600
+    ],
+    "sagittal": [
+     231,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 36.0,
+     "ssim": 0.7929
+    },
+    "int8": {
+     "psnr": 43.06,
+     "ssim": 0.9509
+    },
+    "redcnn": {
+     "psnr": 47.02,
+     "ssim": 0.9818
+    },
+    "scratch": {
+     "psnr": 47.09,
+     "ssim": 0.9822
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.442,
+     "fast": 0.245,
+     "int8": 0.343,
+     "redcnn": 0.502,
+     "finetuned": 0.413,
+     "scratch": 0.455
+    },
+    "otsu2_med3": {
+     "ref60": 0.427,
+     "fast": 0.309,
+     "int8": 0.394,
+     "redcnn": 0.479,
+     "finetuned": 0.387,
+     "scratch": 0.433
+    },
+    "otsu3_raw": {
+     "ref60": 0.818,
+     "fast": 0.37,
+     "int8": 0.669,
+     "redcnn": 0.65,
+     "finetuned": 0.649,
+     "scratch": 0.644
+    },
+    "otsu3_med3": {
+     "ref60": 0.795,
+     "fast": 0.533,
+     "int8": 0.767,
+     "redcnn": 0.656,
+     "finetuned": 0.656,
+     "scratch": 0.652
+    }
+   }
+  },
+  {
+   "id": 12,
+   "label": "Sample 12",
+   "dir": "sample12",
+   "voxel_um": 53.32,
+   "shape_zxy": [
+    1060,
+    470,
+    490
+   ],
+   "window": [
+    3366,
+    11133
+   ],
+   "image_px": {
+    "axial": [
+     490,
+     470
+    ],
+    "coronal": [
+     266,
+     600
+    ],
+    "sagittal": [
+     277,
+     600
+    ]
+   },
+   "metrics": {
+    "fast": {
+     "psnr": 34.81,
+     "ssim": 0.7466
+    },
+    "int8": {
+     "psnr": 41.6,
+     "ssim": 0.9329
+    },
+    "redcnn": {
+     "psnr": 46.61,
+     "ssim": 0.9805
+    },
+    "scratch": {
+     "psnr": 46.7,
+     "ssim": 0.981
+    }
+   },
+   "dice": {
+    "otsu2_raw": {
+     "ref60": 0.791,
+     "fast": 0.26,
+     "int8": 0.449,
+     "redcnn": 0.713,
+     "finetuned": 0.696,
+     "scratch": 0.712
+    },
+    "otsu2_med3": {
+     "ref60": 0.77,
+     "fast": 0.366,
+     "int8": 0.688,
+     "redcnn": 0.711,
+     "finetuned": 0.695,
+     "scratch": 0.709
+    },
+    "otsu3_raw": {
+     "ref60": 0.846,
+     "fast": 0.401,
+     "int8": 0.752,
+     "redcnn": 0.659,
+     "finetuned": 0.658,
+     "scratch": 0.649
+    },
+    "otsu3_med3": {
+     "ref60": 0.804,
+     "fast": 0.636,
+     "int8": 0.814,
+     "redcnn": 0.662,
+     "finetuned": 0.669,
+     "scratch": 0.668
+    }
+   }
+  }
+ ],
+ "err_lim": 2500.0,
+ "has_extra": true
+}
