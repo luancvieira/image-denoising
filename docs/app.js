@@ -52,9 +52,12 @@
   function widthVox(s, plane) { return plane === "coronal" ? s.shape_zxy[1] : s.shape_zxy[2]; }
 
   function badge(s, key) {
+    const phiMan = s.porosity_manual != null ? `φ = ${s.porosity_manual.toFixed(3)}` : "";
+    if (key === "manual") return phiMan;
     if (state.mode === "seg") {
+      const p = s.porosity && s.porosity[state.pipe] && s.porosity[state.pipe][key];
       const d = s.dice && s.dice[state.pipe] && s.dice[state.pipe][key];
-      return d != null ? `Dice ${d.toFixed(3)}` : "";
+      return [p != null ? `φ = ${p.toFixed(3)}` : "", d != null ? `Dice ${d.toFixed(3)}` : ""].filter(Boolean).join(" · ");
     }
     const r = s.metrics && s.metrics[key];
     return r ? `PSNR ${r.psnr.toFixed(2)} dB · SSIM ${r.ssim.toFixed(3)}` : "";
@@ -186,7 +189,8 @@
       const [z, x, y] = s.shape_zxy;
       $("info").textContent = `${s.label} · ${PLANE_LABEL[state.plane]} central slice · crop ${x} × ${y} × ${z} voxels · ` +
         `voxel size ${s.voxel_um.toFixed(1)} µm · gray window ${s.window[0]}–${s.window[1]}` +
-        (state.mode === "seg" ? ` · ${PIPES.find((p) => p.key === state.pipe).label}; Dice computed in 3D over the whole crop` : "");
+        (s.porosity_manual != null ? ` · manual porosity φ = ${s.porosity_manual.toFixed(3)}` : "") +
+        (state.mode === "seg" ? ` · ${PIPES.find((p) => p.key === state.pipe).label}; porosity φ and Dice computed in 3D over the whole crop` : "");
       shownVols().forEach((k) => g.appendChild(card(s, k, vlabel(k))));
     } else {
       $("info").textContent = `${vlabel(state.single)} · ${PLANE_LABEL[state.plane]} central slice of every sample` +
