@@ -24,12 +24,12 @@
 
   const state = {
     man: null, sample: 0, plane: "axial", mode: "gray", pipe: "otsu3_raw", layout: "volumes",
-    on: new Set(), single: "scratch", lb: -1, segCmp: false,
+    on: new Set(), single: "scratch", lb: -1,
   };
   const $ = (id) => document.getElementById(id);
 
   // Segmentation PNGs encode the comparison with the manual reference (black both, red added, blue missed,
-  // light gray solid). Without "compare", they are recoloured to a plain mask: pore black, solid light gray.
+  // light gray solid); they are shown recoloured to a plain mask: pore black, solid light gray.
   const plainCache = new Map();
   function plainSeg(url) {
     if (!plainCache.has(url)) {
@@ -57,7 +57,7 @@
   }
 
   function setSrc(img, url) {
-    if (state.mode === "seg" && !state.segCmp && url.includes("/seg_")) {
+    if (state.mode === "seg" && url.includes("/seg_")) {
       img.removeAttribute("src");
       plainSeg(url).then((d) => { img.src = d; }).catch(() => { img.src = url; });
     } else {
@@ -125,12 +125,12 @@
   function persist() {
     store("viewer.v2", JSON.stringify({
       sample: state.sample, plane: state.plane, mode: state.mode, pipe: state.pipe, layout: state.layout,
-      on: [...state.on], single: state.single, segCmp: state.segCmp,
+      on: [...state.on], single: state.single,
     }));
     const q = new URLSearchParams({
       sample: String(state.man.samples[state.sample].id), plane: state.plane, mode: state.mode,
     });
-    if (state.mode === "seg") { q.set("pipeline", state.pipe); if (state.segCmp) q.set("compare", "1"); }
+    if (state.mode === "seg") q.set("pipeline", state.pipe);
     if (state.layout === "samples") { q.set("layout", "samples"); q.set("volume", state.single); }
     try { history.replaceState(null, "", "?" + q.toString()); } catch (e) { /* file:// */ }
   }
@@ -147,8 +147,6 @@
       (k) => k === state.plane, (k) => { state.plane = k; render(); });
     $("pipeGroup").hidden = state.mode !== "seg";
     fillChips("pipes", PIPES, "aria-selected", (k) => k === state.pipe, (k) => { state.pipe = k; render(); });
-    fillChips("segview", [{ key: "plain", label: "Pore / solid" }, { key: "cmp", label: "Compare with manual" }],
-      "aria-selected", (k) => (k === "cmp") === state.segCmp, (k) => { state.segCmp = k === "cmp"; render(); });
     const vols = modeVols().map((k) => ({ key: k, label: vlabel(k) }));
     if (state.layout === "volumes") {
       $("volLab").textContent = "Volumes";
@@ -186,10 +184,7 @@
       L.innerHTML = `<span class="rampbox"><span class="ramp"></span><span class="ticks"><span>&minus;${lim}</span><span>0</span><span>+${lim}</span></span></span>` +
         `<span class="lt">Volume &minus; reference (60 min), gray levels</span>`;
     } else if (state.mode === "seg") {
-      const items = state.segCmp
-        ? [["#000000", "Pore in both"], ["#d62728", "Pore only in the automatic mask (added)"],
-          ["#1f77b4", "Pore only in the manual reference (missed)"], ["#f2f2f2", "Solid in both"]]
-        : [["#000000", "Pore"], ["#f2f2f2", "Solid"]];
+      const items = [["#000000", "Pore"], ["#f2f2f2", "Solid"]];
       L.innerHTML = items.map(([c, t]) => `<span class="sw"><i style="background:${c}"></i>${t}</span>`).join("");
     } else {
       L.innerHTML = "";
@@ -301,7 +296,6 @@
       if (saved.layout === "samples" || saved.layout === "volumes") state.layout = saved.layout;
       if (Array.isArray(saved.on)) state.on = new Set(saved.on);
       if (saved.single) state.single = saved.single;
-      state.segCmp = saved.segCmp === true;
     }
     const q = new URLSearchParams(location.search);
     const qs = parseInt(q.get("sample"), 10);
@@ -312,7 +306,6 @@
     if (PIPES.some((p) => p.key === q.get("pipeline"))) state.pipe = q.get("pipeline");
     if (q.get("layout") === "samples") state.layout = "samples";
     if (q.get("volume")) state.single = q.get("volume");
-    if (q.has("compare")) state.segCmp = q.get("compare") === "1";
     if (!man.has_extra) state.mode = "gray";
     if (![...state.on].some((k) => man.volumes.some((v) => v.key === k))) state.on = new Set(man.volumes.map((v) => v.key));
     fixSingle();

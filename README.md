@@ -181,7 +181,7 @@ Thresholds come from a 1024-bin histogram over the 0.01-99.99 percentile range, 
 
 ## 6. Sample Viewer
 
-`docs/` is a static website, published with GitHub Pages, with the central axial, coronal and sagittal slices of the 12 samples after aluminium standardization: gray values of the acquisitions, the restored volumes and the manual segmentation; error maps (volume minus reference); and the automatic segmentations of the four pipelines compared with the manual segmentation, with PSNR, SSIM, porosity and Dice. The images are 8-bit PNG renderings of each sample's gray window at full resolution (the volumes themselves are 16-bit).
+`docs/` is a static website, published with GitHub Pages, with the central axial, coronal and sagittal slices of the 12 samples after aluminium standardization: gray values of the acquisitions, the restored volumes and the manual segmentation; error maps (volume minus reference); and the automatic segmentations of the four pipelines (pore and solid), with PSNR, SSIM, porosity and Dice against the manual segmentation. The images are 8-bit PNG renderings of each sample's gray window at full resolution (the volumes themselves are 16-bit).
 
 To regenerate the images, list the volumes of each sample in a CSV (`sample, voxel_um, reference, fast, intermediate, redcnn, restormer_finetuned, restormer_scratch, manual_seg`) and run:
 
