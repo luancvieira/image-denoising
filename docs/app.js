@@ -24,9 +24,46 @@
 
   const state = {
     man: null, sample: 0, plane: "axial", mode: "gray", pipe: "otsu3_raw", layout: "volumes",
-    on: new Set(), single: "scratch", lb: -1,
+    on: new Set(), single: "scratch", lb: -1, segCmp: false,
   };
   const $ = (id) => document.getElementById(id);
+
+  // Segmentation PNGs encode the comparison with the manual reference (black both, red added, blue missed,
+  // light gray solid). Without "compare", they are recoloured to a plain mask: pore black, solid light gray.
+  const plainCache = new Map();
+  function plainSeg(url) {
+    if (!plainCache.has(url)) {
+      plainCache.set(url, new Promise((resolve, reject) => {
+        const im = new Image();
+        im.onload = () => {
+          const c = document.createElement("canvas");
+          c.width = im.naturalWidth; c.height = im.naturalHeight;
+          const ctx = c.getContext("2d");
+          ctx.drawImage(im, 0, 0);
+          const d = ctx.getImageData(0, 0, c.width, c.height), p = d.data;
+          for (let i = 0; i < p.length; i += 4) {
+            const r = p[i], g = p[i + 1], b = p[i + 2];
+            if (r > 150 && g < 100 && b < 100) { p[i] = p[i + 1] = p[i + 2] = 0; }          // added -> pore
+            else if (b > 150 && r < 100) { p[i] = p[i + 1] = p[i + 2] = 242; }               // missed -> solid
+          }
+          ctx.putImageData(d, 0, 0);
+          resolve(c.toDataURL("image/png"));
+        };
+        im.onerror = reject;
+        im.src = url;
+      }));
+    }
+    return plainCache.get(url);
+  }
+
+  function setSrc(img, url) {
+    if (state.mode === "seg" && !state.segCmp && url.includes("/seg_")) {
+      img.removeAttribute("src");
+      plainSeg(url).then((d) => { img.src = d; }).catch(() => { img.src = url; });
+    } else {
+      img.src = url;
+    }
+  }
 
   function store(key, val) {
     try {
@@ -88,12 +125,12 @@
   function persist() {
     store("viewer.v2", JSON.stringify({
       sample: state.sample, plane: state.plane, mode: state.mode, pipe: state.pipe, layout: state.layout,
-      on: [...state.on], single: state.single,
+      on: [...state.on], single: state.single, segCmp: state.segCmp,
     }));
     const q = new URLSearchParams({
       sample: String(state.man.samples[state.sample].id), plane: state.plane, mode: state.mode,
     });
-    if (state.mode === "seg") q.set("pipeline", state.pipe);
+    if (state.mode === "seg") { q.set("pipeline", state.pipe); if (state.segCmp) q.set("compare", "1"); }
     if (state.layout === "samples") { q.set("layout", "samples"); q.set("volume", state.single); }
     try { history.replaceState(null, "", "?" + q.toString()); } catch (e) { /* file:// */ }
   }
@@ -110,6 +147,8 @@
       (k) => k === state.plane, (k) => { state.plane = k; render(); });
     $("pipeGroup").hidden = state.mode !== "seg";
     fillChips("pipes", PIPES, "aria-selected", (k) => k === state.pipe, (k) => { state.pipe = k; render(); });
+    fillChips("segview", [{ key: "plain", label: "Pore / solid" }, { key: "cmp", label: "Compare with manual" }],
+      "aria-selected", (k) => (k === "cmp") === state.segCmp, (k) => { state.segCmp = k === "cmp"; render(); });
     const vols = modeVols().map((k) => ({ key: k, label: vlabel(k) }));
     if (state.layout === "volumes") {
       $("volLab").textContent = "Volumes";
@@ -147,9 +186,11 @@
       L.innerHTML = `<span class="rampbox"><span class="ramp"></span><span class="ticks"><span>&minus;${lim}</span><span>0</span><span>+${lim}</span></span></span>` +
         `<span class="lt">Volume &minus; reference (60 min), gray levels</span>`;
     } else if (state.mode === "seg") {
-      L.innerHTML = [["#000000", "Pore in both"], ["#d62728", "Pore only in the automatic mask (added)"],
-        ["#1f77b4", "Pore only in the manual reference (missed)"], ["#f2f2f2", "Solid in both"]]
-        .map(([c, t]) => `<span class="sw"><i style="background:${c}"></i>${t}</span>`).join("");
+      const items = state.segCmp
+        ? [["#000000", "Pore in both"], ["#d62728", "Pore only in the automatic mask (added)"],
+          ["#1f77b4", "Pore only in the manual reference (missed)"], ["#f2f2f2", "Solid in both"]]
+        : [["#000000", "Pore"], ["#f2f2f2", "Solid"]];
+      L.innerHTML = items.map(([c, t]) => `<span class="sw"><i style="background:${c}"></i>${t}</span>`).join("");
     } else {
       L.innerHTML = "";
     }
@@ -165,7 +206,7 @@
     const f = document.createElement("div"); f.className = "frame";
     const img = document.createElement("img");
     img.loading = "lazy"; img.decoding = "async";
-    img.src = src(s, key, state.plane);
+    setSrc(img, src(s, key, state.plane));
     img.alt = `${s.label}, ${vlabel(key)}, ${PLANE_LABEL[state.plane]} view`;
     const px = s.image_px && s.image_px[state.plane];
     if (px) { img.width = px[0]; img.height = px[1]; }
@@ -208,8 +249,8 @@
     const s = state.man.samples[state.sample];
     const a = $("cmpA").value, b = $("cmpB").value;
     if (!a || !b) return;
-    $("swipeA").src = src(s, a, state.plane); $("swipeA").alt = vlabel(a);
-    $("swipeB").src = src(s, b, state.plane); $("swipeB").alt = vlabel(b);
+    setSrc($("swipeA"), src(s, a, state.plane)); $("swipeA").alt = vlabel(a);
+    setSrc($("swipeB"), src(s, b, state.plane)); $("swipeB").alt = vlabel(b);
     $("swipeLabA").textContent = vlabel(a); $("swipeLabB").textContent = vlabel(b);
     $("swipe").classList.toggle("tall", state.plane !== "axial");
     setSwipe($("swipeRange").value);
@@ -232,7 +273,7 @@
     if (!lbItems.length) return closeLb();
     state.lb = (state.lb + lbItems.length) % lbItems.length;
     const [i, k] = lbItems[state.lb], s = state.man.samples[i];
-    $("lbImg").src = src(s, k, state.plane);
+    setSrc($("lbImg"), src(s, k, state.plane));
     $("lbImg").alt = `${s.label}, ${vlabel(k)}`;
     const b = badge(s, k);
     $("lbCap").textContent = `${s.label} · ${PLANE_LABEL[state.plane]} · ${vlabel(k)}` + (b ? ` · ${b}` : "");
@@ -260,6 +301,7 @@
       if (saved.layout === "samples" || saved.layout === "volumes") state.layout = saved.layout;
       if (Array.isArray(saved.on)) state.on = new Set(saved.on);
       if (saved.single) state.single = saved.single;
+      state.segCmp = saved.segCmp === true;
     }
     const q = new URLSearchParams(location.search);
     const qs = parseInt(q.get("sample"), 10);
@@ -270,6 +312,7 @@
     if (PIPES.some((p) => p.key === q.get("pipeline"))) state.pipe = q.get("pipeline");
     if (q.get("layout") === "samples") state.layout = "samples";
     if (q.get("volume")) state.single = q.get("volume");
+    if (q.has("compare")) state.segCmp = q.get("compare") === "1";
     if (!man.has_extra) state.mode = "gray";
     if (![...state.on].some((k) => man.volumes.some((v) => v.key === k))) state.on = new Set(man.volumes.map((v) => v.key));
     fixSingle();
