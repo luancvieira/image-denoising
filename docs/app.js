@@ -16,15 +16,21 @@
   ];
   // volumes available in each mode
   const MODE_VOLS = {
-    gray: ["ref60", "fast", "int8", "redcnn", "finetuned", "scratch", "manual"],
-    err: ["fast", "int8", "redcnn", "finetuned", "scratch"],
+    gray: ["ref60", "fast", "int8", "direct", "redcnn", "finetuned", "scratch", "manual"],
+    err: ["fast", "int8", "direct", "redcnn", "finetuned", "scratch"],
     seg: ["manual", "ref60", "fast", "int8", "redcnn", "finetuned", "scratch"],
   };
+  // two cases of the article: aluminium-standardized volumes (data/) and volumes as acquired (data/raw/)
+  const CASES = [
+    { key: "al", label: "Aluminium-standardized", url: "data/manifest.json" },
+    { key: "raw", label: "Without standardization", url: "data/raw/manifest.json" },
+  ];
+  const mans = {};
   const SEG_LABEL = { ref60: "60 min (automatic)", manual: "Manual segmentation (60 min)" };
 
   const state = {
     man: null, sample: 0, plane: "axial", mode: "gray", pipe: "otsu3_raw", layout: "volumes",
-    on: new Set(), single: "scratch", lb: -1,
+    on: new Set(), single: "scratch", lb: -1, kase: "al",
   };
   const $ = (id) => document.getElementById(id);
 
@@ -125,11 +131,12 @@
   function persist() {
     store("viewer.v2", JSON.stringify({
       sample: state.sample, plane: state.plane, mode: state.mode, pipe: state.pipe, layout: state.layout,
-      on: [...state.on], single: state.single,
+      on: [...state.on], single: state.single, kase: state.kase,
     }));
     const q = new URLSearchParams({
       sample: String(state.man.samples[state.sample].id), plane: state.plane, mode: state.mode,
     });
+    if (state.kase === "raw") q.set("standardization", "none");
     if (state.mode === "seg") q.set("pipeline", state.pipe);
     if (state.layout === "samples") { q.set("layout", "samples"); q.set("volume", state.single); }
     try { history.replaceState(null, "", "?" + q.toString()); } catch (e) { /* file:// */ }
@@ -140,6 +147,10 @@
     fillChips("samples", m.samples.map((s, i) => ({ key: String(i), label: String(s.id) })),
       "aria-selected", (k) => Number(k) === state.sample, (k) => { state.sample = Number(k); render(); });
     $("samplesGroup").hidden = state.layout === "samples";
+    $("caseGroup").hidden = !mans.raw;
+    fillChips("cases", CASES.filter((c) => mans[c.key]), "aria-selected", (k) => k === state.kase, (k) => {
+      state.kase = k; state.man = mans[k]; fixSingle(); render();
+    });
     fillChips("layout", [{ key: "volumes", label: "One sample, several volumes" }, { key: "samples", label: "One volume, all samples" }],
       "aria-selected", (k) => k === state.layout, (k) => { state.layout = k; render(); });
     fillChips("modes", MODES, "aria-selected", (k) => k === state.mode, (k) => { state.mode = k; fixSingle(); render(); });
@@ -223,13 +234,15 @@
     g.classList.toggle("tall", state.plane !== "axial");
     if (state.layout === "volumes") {
       const [z, x, y] = s.shape_zxy;
-      $("info").textContent = `${s.label} · ${PLANE_LABEL[state.plane]} central slice · crop ${x} × ${y} × ${z} voxels · ` +
+      $("info").textContent = `${s.label} · ${CASES.find((c) => c.key === state.kase).label} · ` +
+        `${PLANE_LABEL[state.plane]} central slice · crop ${x} × ${y} × ${z} voxels · ` +
         `voxel size ${s.voxel_um.toFixed(1)} µm · gray window ${s.window[0]}–${s.window[1]}` +
         (s.porosity_manual != null ? ` · manual porosity φ = ${s.porosity_manual.toFixed(3)}` : "") +
         (state.mode === "seg" ? ` · ${PIPES.find((p) => p.key === state.pipe).label}; porosity φ and Dice computed in 3D over the whole crop` : "");
       shownVols().forEach((k) => g.appendChild(card(s, k, vlabel(k))));
     } else {
-      $("info").textContent = `${vlabel(state.single)} · ${PLANE_LABEL[state.plane]} central slice of every sample` +
+      $("info").textContent = `${vlabel(state.single)} · ${CASES.find((c) => c.key === state.kase).label} · ` +
+        `${PLANE_LABEL[state.plane]} central slice of every sample` +
         (state.mode === "seg" ? ` · ${PIPES.find((p) => p.key === state.pipe).label}` : "") +
         " · each sample has its own gray window";
       m.samples.forEach((smp) => g.appendChild(card(smp, state.single, smp.label)));
@@ -286,6 +299,7 @@
 
   function init(man) {
     state.man = man;
+    const q0 = new URLSearchParams(location.search);
     let saved = null;
     try { saved = JSON.parse(store("viewer.v2") || "null"); } catch (e) { saved = null; }
     if (saved) {
@@ -296,6 +310,11 @@
       if (saved.layout === "samples" || saved.layout === "volumes") state.layout = saved.layout;
       if (Array.isArray(saved.on)) state.on = new Set(saved.on);
       if (saved.single) state.single = saved.single;
+      if (saved.kase === "raw" && mans.raw) { state.kase = "raw"; state.man = man = mans.raw; }
+    }
+    if (q0.has("standardization")) {
+      const k = q0.get("standardization") === "none" && mans.raw ? "raw" : "al";
+      state.kase = k; state.man = man = mans[k];
     }
     const q = new URLSearchParams(location.search);
     const qs = parseInt(q.get("sample"), 10);
@@ -321,8 +340,12 @@
     render();
   }
 
-  fetch("data/manifest.json", { cache: "no-cache" })
-    .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
-    .then(init)
-    .catch((e) => { $("info").textContent = "Could not load data/manifest.json (" + e.message + ")."; });
+  const getJson = (url) => fetch(url, { cache: "no-cache" })
+    .then((r) => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+  Promise.all(CASES.map((c) => getJson(c.url).then((m) => { mans[c.key] = m; }).catch(() => null)))
+    .then(() => {
+      if (!mans.al) throw new Error("data/manifest.json not found");
+      init(mans.al);
+    })
+    .catch((e) => { $("info").textContent = "Could not load the data (" + e.message + ")."; });
 })();

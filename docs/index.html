@@ -5,19 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Micro-CT Sample Viewer</title>
   <meta name="description" content="Central views of the 12 carbonate plugs: fast, intermediate and reference micro-CT acquisitions, restored volumes, error maps and segmentations.">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <header class="top">
     <div class="wrap">
       <h1>Fast-to-long micro-CT denoising &middot; sample viewer</h1>
-      <p class="sub">Central slices of the 12 carbonate plugs after aluminium standardization: fast (2&nbsp;min&nbsp;35&nbsp;s), intermediate (8&nbsp;min) and reference (60&nbsp;min) acquisitions, the fast scans restored by RED-CNN and Restormer, their errors with respect to the reference, and automatic segmentations of each volume, with porosity and Dice against the manual segmentation of the reference.
+      <p class="sub">Central slices of the 12 carbonate plugs, without and with aluminium standardization: fast (2&nbsp;min&nbsp;35&nbsp;s), intermediate (8&nbsp;min) and reference (60&nbsp;min) acquisitions, the fast scans restored by Restormer (direct transfer, fine-tuned and random initialization) and RED-CNN, their errors with respect to the reference, and automatic segmentations of each volume, with porosity and Dice against the manual segmentation of the reference.
         <a href="https://github.com/luancvieira/image-denoising">Code repository</a></p>
     </div>
   </header>
 
   <main class="wrap">
     <section class="controls" aria-label="Viewer controls">
+      <div class="group" id="caseGroup" hidden>
+        <span class="lab">Gray scale</span>
+        <div id="cases" class="chips" role="tablist"></div>
+      </div>
       <div class="group">
         <span class="lab">Layout</span>
         <div id="layout" class="chips" role="tablist"></div>
@@ -67,7 +71,7 @@
     </section>
 
     <footer class="foot">
-      <p>Gray values of each sample share one window (0.1&ndash;99.9 percentiles of the fast, 8&nbsp;min and 60&nbsp;min central views). Restored volumes use the epoch selected for each test plug in the leave-one-plug-out evaluation. PSNR, SSIM, porosity &phi; and Dice are 3D values over the cropped volume; PSNR and SSIM are computed with respect to the 60&nbsp;min reference, Dice with respect to its manual segmentation. Error maps show volume minus reference, clipped at &plusmn;2500 gray levels. Segmentations follow the article: the threshold of each pipeline is computed on the whole volume, and pore clusters smaller than 27 voxels (6-connectivity) are removed. The micro-CT volumes are 16-bit; the images shown here are 8-bit PNG renderings of each sample's gray window, at full resolution (one pixel per voxel) and with the origin at the lower left, as in the paper figures. Click an image to enlarge it; use the arrow keys to move between images or samples.</p>
+      <p>Gray values of each sample share one window (0.1&ndash;99.9 percentiles of the fast, 8&nbsp;min and 60&nbsp;min central views). Each case (without and with aluminium standardization) uses the volumes and models of that case. Restored volumes use the epoch selected for each test plug in the leave-one-plug-out evaluation; direct transfer is the pretrained Restormer applied without training, and is not segmented. PSNR, SSIM, porosity &phi; and Dice are 3D values over the cropped volume; PSNR and SSIM are computed with respect to the 60&nbsp;min reference, Dice with respect to its manual segmentation. Error maps show volume minus reference, clipped at &plusmn;2500 gray levels. Segmentations follow the article: the threshold of each pipeline is computed on the whole volume, and pore clusters smaller than 27 voxels (6-connectivity) are removed. The micro-CT volumes are 16-bit; the images shown here are 8-bit PNG renderings of each sample's gray window, at full resolution (one pixel per voxel) and with the origin at the lower left, as in the paper figures. Click an image to enlarge it; use the arrow keys to move between images or samples.</p>
     </footer>
   </main>
 
@@ -81,6 +85,6 @@
     <button id="lbNext" class="lb-nav next" aria-label="Next">&#8250;</button>
   </div>
 
-  <script src="app.js?v=5"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>

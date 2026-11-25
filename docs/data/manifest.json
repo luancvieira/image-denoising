@@ -19,6 +19,10 @@
    "label": "Intermediate (8 min)"
   },
   {
+   "key": "direct",
+   "label": "Restormer direct transfer"
+  },
+  {
    "key": "redcnn",
    "label": "RED-CNN"
   },
@@ -73,17 +77,21 @@
      "psnr": 40.92,
      "ssim": 0.929
     },
+    "direct": {
+     "psnr": 37.4,
+     "ssim": 0.8974
+    },
     "redcnn": {
      "psnr": 44.52,
      "ssim": 0.9725
     },
-    "scratch": {
-     "psnr": 44.38,
-     "ssim": 0.9728
-    },
     "finetuned": {
      "psnr": 44.63,
      "ssim": 0.9734
+    },
+    "scratch": {
+     "psnr": 44.38,
+     "ssim": 0.9728
     }
    },
    "dice": {
@@ -193,17 +201,21 @@
      "psnr": 41.35,
      "ssim": 0.9378
     },
+    "direct": {
+     "psnr": 37.71,
+     "ssim": 0.8928
+    },
     "redcnn": {
      "psnr": 42.88,
      "ssim": 0.9579
     },
-    "scratch": {
-     "psnr": 42.89,
-     "ssim": 0.9581
-    },
     "finetuned": {
      "psnr": 43.01,
      "ssim": 0.9593
+    },
+    "scratch": {
+     "psnr": 42.89,
+     "ssim": 0.9581
     }
    },
    "dice": {
@@ -313,17 +325,21 @@
      "psnr": 41.79,
      "ssim": 0.9403
     },
+    "direct": {
+     "psnr": 36.29,
+     "ssim": 0.8872
+    },
     "redcnn": {
      "psnr": 45.53,
      "ssim": 0.9797
     },
-    "scratch": {
-     "psnr": 45.74,
-     "ssim": 0.9806
-    },
     "finetuned": {
      "psnr": 45.97,
      "ssim": 0.9812
+    },
+    "scratch": {
+     "psnr": 45.74,
+     "ssim": 0.9806
     }
    },
    "dice": {
@@ -433,17 +449,21 @@
      "psnr": 42.23,
      "ssim": 0.9465
     },
+    "direct": {
+     "psnr": 38.91,
+     "ssim": 0.9183
+    },
     "redcnn": {
      "psnr": 43.9,
      "ssim": 0.9688
     },
-    "scratch": {
-     "psnr": 43.86,
-     "ssim": 0.969
-    },
     "finetuned": {
      "psnr": 43.84,
      "ssim": 0.9691
+    },
+    "scratch": {
+     "psnr": 43.86,
+     "ssim": 0.969
     }
    },
    "dice": {
@@ -553,17 +573,21 @@
      "psnr": 42.62,
      "ssim": 0.9452
     },
+    "direct": {
+     "psnr": 41.52,
+     "ssim": 0.9515
+    },
     "redcnn": {
      "psnr": 47.23,
      "ssim": 0.9831
     },
-    "scratch": {
-     "psnr": 47.33,
-     "ssim": 0.9835
-    },
     "finetuned": {
      "psnr": 47.28,
      "ssim": 0.9836
+    },
+    "scratch": {
+     "psnr": 47.33,
+     "ssim": 0.9835
     }
    },
    "dice": {
@@ -673,17 +697,21 @@
      "psnr": 41.52,
      "ssim": 0.9363
     },
+    "direct": {
+     "psnr": 39.42,
+     "ssim": 0.9143
+    },
     "redcnn": {
      "psnr": 43.94,
      "ssim": 0.966
     },
-    "scratch": {
-     "psnr": 43.87,
-     "ssim": 0.9663
-    },
     "finetuned": {
      "psnr": 44.05,
      "ssim": 0.967
+    },
+    "scratch": {
+     "psnr": 43.87,
+     "ssim": 0.9663
     }
    },
    "dice": {
@@ -793,17 +821,21 @@
      "psnr": 42.92,
      "ssim": 0.9523
     },
+    "direct": {
+     "psnr": 40.26,
+     "ssim": 0.934
+    },
     "redcnn": {
      "psnr": 44.2,
      "ssim": 0.9662
     },
-    "scratch": {
-     "psnr": 44.21,
-     "ssim": 0.967
-    },
     "finetuned": {
      "psnr": 44.24,
      "ssim": 0.9675
+    },
+    "scratch": {
+     "psnr": 44.21,
+     "ssim": 0.967
     }
    },
    "dice": {
@@ -913,17 +945,21 @@
      "psnr": 42.06,
      "ssim": 0.9394
     },
+    "direct": {
+     "psnr": 40.76,
+     "ssim": 0.9448
+    },
     "redcnn": {
      "psnr": 46.46,
      "ssim": 0.9798
     },
-    "scratch": {
-     "psnr": 46.53,
-     "ssim": 0.9803
-    },
     "finetuned": {
      "psnr": 46.53,
      "ssim": 0.9804
+    },
+    "scratch": {
+     "psnr": 46.53,
+     "ssim": 0.9803
     }
    },
    "dice": {
@@ -1033,17 +1069,21 @@
      "psnr": 40.7,
      "ssim": 0.9197
     },
+    "direct": {
+     "psnr": 39.68,
+     "ssim": 0.9261
+    },
     "redcnn": {
      "psnr": 45.66,
      "ssim": 0.9763
     },
-    "scratch": {
-     "psnr": 45.64,
-     "ssim": 0.977
-    },
     "finetuned": {
      "psnr": 45.74,
      "ssim": 0.9771
+    },
+    "scratch": {
+     "psnr": 45.64,
+     "ssim": 0.977
     }
    },
    "dice": {
@@ -1153,17 +1193,21 @@
      "psnr": 43.05,
      "ssim": 0.9502
     },
+    "direct": {
+     "psnr": 42.84,
+     "ssim": 0.9603
+    },
     "redcnn": {
      "psnr": 47.66,
      "ssim": 0.9844
     },
-    "scratch": {
-     "psnr": 47.79,
-     "ssim": 0.9848
-    },
     "finetuned": {
      "psnr": 47.81,
      "ssim": 0.9849
+    },
+    "scratch": {
+     "psnr": 47.79,
+     "ssim": 0.9848
     }
    },
    "dice": {
@@ -1273,17 +1317,21 @@
      "psnr": 43.06,
      "ssim": 0.9509
     },
+    "direct": {
+     "psnr": 41.74,
+     "ssim": 0.9531
+    },
     "redcnn": {
      "psnr": 47.02,
      "ssim": 0.9818
     },
-    "scratch": {
-     "psnr": 47.09,
-     "ssim": 0.9822
-    },
     "finetuned": {
      "psnr": 47.1,
      "ssim": 0.9823
+    },
+    "scratch": {
+     "psnr": 47.09,
+     "ssim": 0.9822
     }
    },
    "dice": {
@@ -1393,17 +1441,21 @@
      "psnr": 41.6,
      "ssim": 0.9329
     },
+    "direct": {
+     "psnr": 41.2,
+     "ssim": 0.9422
+    },
     "redcnn": {
      "psnr": 46.61,
      "ssim": 0.9805
     },
-    "scratch": {
-     "psnr": 46.7,
-     "ssim": 0.981
-    },
     "finetuned": {
      "psnr": 46.77,
      "ssim": 0.9811
+    },
+    "scratch": {
+     "psnr": 46.7,
+     "ssim": 0.981
     }
    },
    "dice": {
@@ -1478,5 +1530,6 @@
   }
  ],
  "err_lim": 2500.0,
- "has_extra": true
+ "has_extra": true,
+ "case": "al"
 }

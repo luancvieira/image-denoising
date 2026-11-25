@@ -2,8 +2,11 @@
 """Export the central views shown by the sample viewer (docs/) from the volumes of each sample.
 
 Input: a CSV with one row per sample and the columns
-    sample, voxel_um, reference, fast, intermediate, redcnn, restormer_finetuned, restormer_scratch, manual_seg
-(paths to .nc volumes; intermediate and the model columns may be empty). Use aluminium-standardized volumes.
+    sample, voxel_um, reference, fast, intermediate, restormer_direct, redcnn, restormer_finetuned,
+    restormer_scratch, manual_seg
+(paths to .nc volumes; intermediate and the model columns may be empty). Run once with the aluminium-standardized
+volumes (--output docs/data) and once with the volumes as acquired (--output docs/data/raw --dir-prefix raw/);
+the viewer switches between the two cases. Direct transfer gets gray and error views only (not segmented).
 
 Output (default docs/data/):
     manifest.json
@@ -16,7 +19,7 @@ sagittal (x) slices; all images are flipped vertically (origin at the lower left
 Gray window of each sample: 0.1-99.9 percentiles of the central views of the fast, intermediate and reference
 volumes. PSNR/SSIM (3D, L = 65535), porosity and Dice (3D, against the manual segmentation) are computed here.
 
-usage: python scripts/export_viewer.py --samples samples.csv --output docs/data [--no-metrics]
+usage: python scripts/export_viewer.py --samples samples.csv --output docs/data [--dir-prefix raw/] [--no-metrics]
 """
 
 from __future__ import annotations
@@ -34,9 +37,10 @@ from scipy import ndimage as ndi
 from microct_denoising.metrics import compute_full_volume_psnr_ssim, pore_mask_from_segmentation
 from microct_denoising.segmentation import PIPELINES, segment
 
-COLUMNS = {"ref60": "reference", "fast": "fast", "int8": "intermediate", "redcnn": "redcnn",
+COLUMNS = {"ref60": "reference", "fast": "fast", "int8": "intermediate", "direct": "restormer_direct", "redcnn": "redcnn",
            "finetuned": "restormer_finetuned", "scratch": "restormer_scratch"}
 LABELS = {"ref60": "Reference (60 min)", "fast": "Fast (2 min 35 s)", "int8": "Intermediate (8 min)",
+          "direct": "Restormer direct transfer",
           "redcnn": "RED-CNN", "finetuned": "Restormer fine-tuned", "scratch": "Restormer random init.",
           "manual": "Manual segmentation (60 min)"}
 PLANES = {"axial": 0, "coronal": 2, "sagittal": 1}  # axis removed from (z, x, y)
@@ -79,6 +83,7 @@ def main() -> int:
     ap.add_argument("--output", type=Path, default=Path("docs/data"))
     ap.add_argument("--var-name", default="microtom")
     ap.add_argument("--seg-var-name", default=None)
+    ap.add_argument("--dir-prefix", default="", help="Prefix of the sample folders in the manifest (raw/ for data/raw).")
     ap.add_argument("--no-metrics", action="store_true", help="Skip PSNR/SSIM (segmentation metrics are always computed).")
     args = ap.parse_args()
 
@@ -86,7 +91,7 @@ def main() -> int:
     out = args.output
     out.mkdir(parents=True, exist_ok=True)
     epal = err_palette()
-    man = {"max_px": None, "planes": list(PLANES), "err_lim": ERR_LIM, "has_extra": True,
+    man = {"case": "raw" if args.dir_prefix else "al", "max_px": None, "planes": list(PLANES), "err_lim": ERR_LIM, "has_extra": True,
            "volumes": [{"key": k, "label": v} for k, v in LABELS.items()], "samples": []}
     for row in rows:
         n = int(row["sample"])
@@ -113,6 +118,11 @@ def main() -> int:
             save_png(np.where(central(manual, p), 0, 242), d / f"manual_{p}.png")
         dice, porosity, metrics = {}, {}, {}
         for k, v in vols.items():
+            if k == "direct":  # not segmented in the article
+                if not args.no_metrics:
+                    psnr, ssim = compute_full_volume_psnr_ssim(v, ref)
+                    metrics[k] = {"psnr": round(psnr, 2), "ssim": round(ssim, 4)}
+                continue
             med = ndi.median_filter(v, size=3)
             for pipe in PIPELINES:
                 mask, info = segment(v, pipe, med)
@@ -130,7 +140,7 @@ def main() -> int:
             print(f"sample {n}: {k} done", flush=True)
         z, x, y = ref.shape
         man["samples"].append(dict(
-            id=n, label=f"Sample {n}", dir=d.name, voxel_um=float(row["voxel_um"]), shape_zxy=[z, x, y],
+            id=n, label=f"Sample {n}", dir=args.dir_prefix + d.name, voxel_um=float(row["voxel_um"]), shape_zxy=[z, x, y],
             window=[round(lo), round(hi)], image_px=sizes, metrics=metrics, dice=dice, porosity=porosity,
             porosity_manual=round(float(manual.mean()), 3)))
     (out / "manifest.json").write_text(json.dumps(man, indent=1), encoding="utf-8")
