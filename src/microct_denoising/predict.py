@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 from pathlib import Path
 
 import torch
@@ -37,6 +38,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--pretrained-weights", type=Path, default=None)
     parser.add_argument("--tile-size", type=int, default=0)
     parser.add_argument("--tile-overlap", type=int, default=32)
+    parser.add_argument("--clip-output", action="store_true", help="Clip to [0, 65535] (off in the article).")
     return parser.parse_args()
 
 
@@ -62,6 +64,7 @@ def main() -> int:
     else:
         raise ValueError("Provide an existing --stats-path or use --fit-stats-from-input.")
 
+    t0 = time.time()
     pred_vol = predict_and_save_volume(
         model=model,
         fast_path=args.input_nc,
@@ -74,12 +77,14 @@ def main() -> int:
         pad_multiple=pad_multiple,
         tile_size=args.tile_size,
         overlap=args.tile_overlap,
+        clip_output=args.clip_output,
     )
+    seconds = time.time() - t0
 
     if args.save_preview is not None:
         save_middle_slice_preview(pred_vol, args.save_preview, f"{args.model} prediction")
 
-    print(f"Saved prediction: {args.output_nc}", flush=True)
+    print(f"Saved prediction: {args.output_nc} ({pred_vol.shape[0]} slices, {seconds:.1f} s)", flush=True)
     return 0
 
 

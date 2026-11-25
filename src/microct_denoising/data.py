@@ -64,10 +64,11 @@ def make_leave_one_out_split(
     exclude_idx: int,
     validation_mode: str = "none",
 ) -> ExperimentSplit:
-    """Create the split used in the article experiments.
+    """Create one split of the nested leave-one-plug-out protocol of the article.
 
-    validation_mode="previous" reserves the previous sample as validation:
-    val_idx = (exclude_idx - 1) % n_samples.
+    validation_mode="none"     : train on every plug except the test plug (final stage).
+    validation_mode="previous" : also hold out the previous plug, val_idx = (exclude_idx - 1) % n_samples,
+                                 used to choose the training epoch (select stage).
     """
 
     n_samples = len(fast_files)
@@ -122,11 +123,11 @@ def compute_fast_mean_std_stats(
     stats_path: Path | None = None,
     force: bool = False,
 ) -> StatsDict:
-    """Compute or load per-volume FAST mean/std statistics.
+    """Compute or load per-volume (per-plug) FAST mean/std statistics.
 
-    The LONG target is normalized with the matching FAST statistics. This keeps
-    the target in the same intensity space as the input and avoids using LONG
-    statistics during training or inference.
+    Each plug is z-score normalized with the mean and standard deviation of its own fast volume, and the LONG
+    target is normalized with the same numbers. This keeps the target in the same intensity space as the input
+    and avoids using LONG statistics during training or inference. A new plug therefore needs only its fast scan.
     """
 
     if stats_path is not None:
@@ -137,7 +138,7 @@ def compute_fast_mean_std_stats(
 
     stats: StatsDict = {}
     for fast_path in fast_files:
-        data = load_volume(fast_path, var_name)
+        data = load_volume(fast_path, var_name).astype(np.float64)
         stats[_stats_key(fast_path, "mean")] = float(np.nanmean(data))
         stats[_stats_key(fast_path, "std")] = float(np.nanstd(data))
 

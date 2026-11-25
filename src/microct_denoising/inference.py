@@ -115,18 +115,25 @@ def predict_volume(
     pad_multiple: int | None = None,
     tile_size: int = 0,
     overlap: int = 32,
+    clip_output: bool = False,
     raw_min: float = RAW_MIN,
     raw_max: float = RAW_MAX,
     progress: bool = True,
+    max_slices: int | None = None,
 ) -> np.ndarray:
-    """Run full-volume inference for a FAST NetCDF volume."""
+    """Run full-volume inference for a FAST NetCDF volume, one axial slice at a time.
+
+    The prediction is mapped back to gray values with the fast statistics of the plug. It is not clipped unless
+    clip_output is set (the article uses no clipping; aluminium-standardized volumes may leave [0, 65535]).
+    """
 
     model.eval()
     with xr.open_dataset(fast_path) as ds:
         da = ds[var_name]
-        pred_vol = np.empty(da.shape, dtype=np.float32)
+        n_slices = da.shape[0] if not max_slices else min(max_slices, da.shape[0])
+        pred_vol = np.empty((n_slices,) + tuple(da.shape[1:]), dtype=np.float32)
 
-        for z_idx in range(da.shape[0]):
+        for z_idx in range(n_slices):
             raw_slice = da.isel(z=z_idx).values.astype(np.float32)
             slice_norm = zscore_with_fast_stats(raw_slice, fast_path, stats)
             if tile_size > 0:
@@ -149,10 +156,12 @@ def predict_volume(
                 )
 
             pred_raw = inverse_zscore_with_fast_stats(pred_norm, fast_path, stats)
-            pred_vol[z_idx] = np.clip(pred_raw, raw_min, raw_max).astype(np.float32)
+            if clip_output:
+                pred_raw = np.clip(pred_raw, raw_min, raw_max)
+            pred_vol[z_idx] = pred_raw.astype(np.float32)
 
-            if progress and ((z_idx + 1) % 10 == 0 or (z_idx + 1) == da.shape[0]):
-                print(f"Predicted slice {z_idx + 1}/{da.shape[0]}", flush=True)
+            if progress and ((z_idx + 1) % 100 == 0 or (z_idx + 1) == n_slices):
+                print(f"Predicted slice {z_idx + 1}/{n_slices}", flush=True)
 
     model.train()
     return pred_vol
@@ -165,8 +174,10 @@ def save_prediction_volume(
     stats: StatsDict,
     output_path: Path,
     model_name: str,
+    clip_output: bool = False,
+    extra_attrs: dict | None = None,
 ) -> None:
-    """Save a raw-intensity prediction volume as NetCDF."""
+    """Save a raw-intensity prediction volume as NetCDF (float32, same dims and coordinates as the input)."""
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with xr.open_dataset(fast_path) as ds:
@@ -179,11 +190,10 @@ def save_prediction_volume(
                 **da.attrs,
                 "model": model_name,
                 "input_file": str(fast_path),
-                "normalization": "zscore_using_fast_mean_std",
+                "normalization": "zscore_using_fast_mean_std_of_this_plug",
                 "saved_space": "raw_intensity_after_inverse_fast_zscore",
-                "raw_output_min": RAW_MIN,
-                "raw_output_max": RAW_MAX,
-                "raw_output_clipped_to_valid_range": "True",
+                "clipping": f"[{RAW_MIN:g}, {RAW_MAX:g}]" if clip_output else "none",
+                **{k: str(v) for k, v in (extra_attrs or {}).items()},
             },
         )
         out_ds = xr.Dataset({var_name: out_da}, attrs=ds.attrs)
@@ -204,6 +214,8 @@ def predict_and_save_volume(
     pad_multiple: int | None = None,
     tile_size: int = 0,
     overlap: int = 32,
+    clip_output: bool = False,
+    extra_attrs: dict | None = None,
 ) -> np.ndarray:
     """Run prediction and save the result to NetCDF."""
 
@@ -217,6 +229,7 @@ def predict_and_save_volume(
         pad_multiple=pad_multiple,
         tile_size=tile_size,
         overlap=overlap,
+        clip_output=clip_output,
     )
     save_prediction_volume(
         pred_vol=pred_vol,
@@ -225,6 +238,8 @@ def predict_and_save_volume(
         stats=stats,
         output_path=output_path,
         model_name=model_name,
+        clip_output=clip_output,
+        extra_attrs=extra_attrs,
     )
     return pred_vol
 
