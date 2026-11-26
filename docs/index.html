@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Micro-CT Sample Viewer</title>
   <meta name="description" content="Central views of the 12 carbonate plugs: fast, intermediate and reference micro-CT acquisitions, restored volumes, error maps and segmentations.">
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
   <header class="top">
@@ -41,6 +41,8 @@
       <div class="group" id="pipeGroup" hidden>
         <span class="lab">Pipeline</span>
         <div id="pipes" class="chips" role="tablist"></div>
+        <span class="lab">Colors</span>
+        <div id="segview" class="chips" role="tablist"></div>
       </div>
       <div class="group wide">
         <span class="lab" id="volLab">Volumes</span>
@@ -85,6 +87,6 @@
     <button id="lbNext" class="lb-nav next" aria-label="Next">&#8250;</button>
   </div>
 
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>

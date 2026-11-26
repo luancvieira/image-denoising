@@ -30,12 +30,13 @@
 
   const state = {
     man: null, sample: 0, plane: "axial", mode: "gray", pipe: "otsu3_raw", layout: "volumes",
-    on: new Set(), single: "scratch", lb: -1, kase: "al",
+    on: new Set(), single: "scratch", lb: -1, kase: "al", segCmp: false,
   };
   const $ = (id) => document.getElementById(id);
 
   // Segmentation PNGs encode the comparison with the manual reference (black both, red added, blue missed,
-  // light gray solid); they are shown recoloured to a plain mask: pore black, solid light gray.
+  // light gray solid). By default they are recoloured to a plain mask (pore black, solid light gray);
+  // "Compare with manual" shows the original colours.
   const plainCache = new Map();
   function plainSeg(url) {
     if (!plainCache.has(url)) {
@@ -63,7 +64,7 @@
   }
 
   function setSrc(img, url) {
-    if (state.mode === "seg" && url.includes("/seg_")) {
+    if (state.mode === "seg" && !state.segCmp && url.includes("/seg_")) {
       img.removeAttribute("src");
       plainSeg(url).then((d) => { img.src = d; }).catch(() => { img.src = url; });
     } else {
@@ -131,13 +132,13 @@
   function persist() {
     store("viewer.v2", JSON.stringify({
       sample: state.sample, plane: state.plane, mode: state.mode, pipe: state.pipe, layout: state.layout,
-      on: [...state.on], single: state.single, kase: state.kase,
+      on: [...state.on], single: state.single, kase: state.kase, segCmp: state.segCmp,
     }));
     const q = new URLSearchParams({
       sample: String(state.man.samples[state.sample].id), plane: state.plane, mode: state.mode,
     });
     if (state.kase === "raw") q.set("standardization", "none");
-    if (state.mode === "seg") q.set("pipeline", state.pipe);
+    if (state.mode === "seg") { q.set("pipeline", state.pipe); if (state.segCmp) q.set("compare", "1"); }
     if (state.layout === "samples") { q.set("layout", "samples"); q.set("volume", state.single); }
     try { history.replaceState(null, "", "?" + q.toString()); } catch (e) { /* file:// */ }
   }
@@ -158,6 +159,8 @@
       (k) => k === state.plane, (k) => { state.plane = k; render(); });
     $("pipeGroup").hidden = state.mode !== "seg";
     fillChips("pipes", PIPES, "aria-selected", (k) => k === state.pipe, (k) => { state.pipe = k; render(); });
+    fillChips("segview", [{ key: "plain", label: "Pore / solid" }, { key: "cmp", label: "Compare with manual" }],
+      "aria-selected", (k) => (k === "cmp") === state.segCmp, (k) => { state.segCmp = k === "cmp"; render(); });
     const vols = modeVols().map((k) => ({ key: k, label: vlabel(k) }));
     if (state.layout === "volumes") {
       $("volLab").textContent = "Volumes";
@@ -195,7 +198,10 @@
       L.innerHTML = `<span class="rampbox"><span class="ramp"></span><span class="ticks"><span>&minus;${lim}</span><span>0</span><span>+${lim}</span></span></span>` +
         `<span class="lt">Volume &minus; reference (60 min), gray levels</span>`;
     } else if (state.mode === "seg") {
-      const items = [["#000000", "Pore"], ["#f2f2f2", "Solid"]];
+      const items = state.segCmp
+        ? [["#000000", "Pore in both"], ["#d62728", "Pore only in the automatic mask (added)"],
+          ["#1f77b4", "Pore only in the manual reference (missed)"], ["#f2f2f2", "Solid in both"]]
+        : [["#000000", "Pore"], ["#f2f2f2", "Solid"]];
       L.innerHTML = items.map(([c, t]) => `<span class="sw"><i style="background:${c}"></i>${t}</span>`).join("");
     } else {
       L.innerHTML = "";
@@ -311,7 +317,9 @@
       if (Array.isArray(saved.on)) state.on = new Set(saved.on);
       if (saved.single) state.single = saved.single;
       if (saved.kase === "raw" && mans.raw) { state.kase = "raw"; state.man = man = mans.raw; }
+      state.segCmp = saved.segCmp === true;
     }
+    if (q0.has("compare")) state.segCmp = q0.get("compare") === "1";
     if (q0.has("standardization")) {
       const k = q0.get("standardization") === "none" && mans.raw ? "raw" : "al";
       state.kase = k; state.man = man = mans[k];
